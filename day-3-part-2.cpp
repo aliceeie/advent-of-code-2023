@@ -60,7 +60,7 @@ int main() {
                     // Check if char is digit and has not been checked already
                     char charToCheck{engineSchem.at(ri).at(ci)};
                     if (isdigit(charToCheck) 
-                        && checkedColPoses.find(charToCheck) == checkedColPoses.end()) {
+                        && checkedColPoses.find(ci) == checkedColPoses.end()) {
                         // Char is digit and part of number
                         // Identify full number
                         string sFullNumber{""};
