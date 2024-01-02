@@ -1,4 +1,4 @@
-// Day 2
+// Day 2 part 2
 
 #include <iostream>
 #include <fstream>
@@ -11,9 +11,6 @@ using namespace std;
 int main() {
     // Declare sum
     int sum{0};
-    int reds{12};
-    int greens{13};
-    int blues{14};
 
     // Go through file line by line
     ifstream file{"inputs/day-2-input.txt"};
@@ -29,9 +26,8 @@ int main() {
             return 1;
         }
         
-        // Determine game ID
-        int gameId = stoi(line.substr(0, index).erase(0, 4));
-        bool impossibleGame = false;
+        // Declare fewest amount for colors
+        map<string, int> fewestColorAmount{{"red", 0}, {"green", 0}, {"blue", 0}};
 
         string rightSide = line.substr(index + 1, line.size());
         
@@ -46,9 +42,6 @@ int main() {
             } else {
                 set = rightSide.substr(0, setIdx);
             }
-
-            // Keep track of color amounts
-            map<string, int> colorCount{{"red", 0}, {"green", 0}, {"blue", 0}};
 
             // Step through set
             while (true) {
@@ -70,8 +63,10 @@ int main() {
                 int amount = stoi(cubes.substr(0, colorIdx));
                 string color = cubes.substr(colorIdx + 1, cubes.size());
 
-                // Update color count
-                colorCount[color] = amount;
+                // Update fewest color amount if larger than present
+                if (fewestColorAmount[color] < amount) {
+                    fewestColorAmount[color] = amount;
+                }
 
                 // Update set
                 set = set.substr(cubeIdx + 1, set.size());
@@ -80,15 +75,6 @@ int main() {
                 if (cubeIdx == string::npos) {
                     break;
                 }
-            }
-
-            // Check if set is impossible
-            if (colorCount.at("red") > reds 
-                || colorCount.at("green") > greens 
-                || colorCount.at("blue") > blues) {
-                // Set is impossible -> game is impossible
-                impossibleGame = true;
-                break;
             }
 
             // Update rightSide
@@ -100,13 +86,8 @@ int main() {
             }
         }
 
-        if (impossibleGame) {
-            // Skip to next game
-            continue;
-        } else {
-            // If possible, add game ID to sum
-            sum += gameId;
-        }
+        int gamePower = fewestColorAmount["red"] * fewestColorAmount["green"] * fewestColorAmount["blue"];
+        sum += gamePower;
     }
     
     cout << "Result: " << sum << endl;
