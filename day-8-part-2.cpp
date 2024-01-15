@@ -5,6 +5,7 @@
 #include <string>
 #include <map>
 #include <vector>
+#include <numeric>
 
 using namespace std;
 
@@ -139,47 +140,23 @@ int main() {
 
     // Now we have all step cycles for which 
     // each start node reaches its end node
-    
+
     // Find greatest common divisor and product of steps
-    int lastGcd{0};
+    long long int lastLcm{0};
     for (auto s : stepsCycles) {
         steps = s.second;
 
-        // Gcd stuff
-        if (lastGcd == 0) {
+        if (lastLcm == 0) {
             // First step
-            lastGcd = steps;
+            lastLcm = steps;
             continue;
         } else {
             // Calc gcd with current steps and last gcd
-            lastGcd = gcd(lastGcd, steps);
+            lastLcm = lcm(lastLcm, steps);
         }
     }
 
-    cout << "GCD is: " << lastGcd << endl;
-
-    long long int stepsProduct1{1};
-    long long int stepsProduct2{1};
-    for (auto s : stepsCycles) {
-        steps = s.second;
-        if (stepsProduct1 > INT64_MAX / steps) {
-            // Will overflow long long int
-            cout << "Overflow 1" << endl;
-            if (stepsProduct2 > INT64_MAX / steps) {
-                cout << "Overflow 2" << endl;
-                exit(1);
-            } else {
-                stepsProduct2 *= steps;
-            }
-        } else {
-            stepsProduct1 *= steps;
-        }
-    }
-
-    // Find least common multiple
-    long long int lcm{(stepsProduct1 / lastGcd) * stepsProduct2};
-
-    cout << "Result: " << lcm << endl;
+    cout << "Result: " << lastLcm << endl;
 
     return 0;
 }
